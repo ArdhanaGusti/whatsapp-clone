@@ -16,7 +16,6 @@ import com.rios.whatsapp_clone.model.response.TokenResponse;
 import com.rios.whatsapp_clone.model.response.WebResponse;
 import com.rios.whatsapp_clone.service.AuthService;
 
-
 @RestController
 public class AuthController {
     @Autowired
@@ -32,7 +31,6 @@ public class AuthController {
         }
     }
 
-    
     @GetMapping(path = "/api/auth/token", produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<TokenResponse> token(String token) {
         try {
@@ -47,7 +45,8 @@ public class AuthController {
     public ResponseEntity<Object> register(@RequestBody RegisterRequest request) {
         try {
             MessageAfterActionResponse registerResponse = authService.register(request);
-            return new ResponseEntity<>(registerResponse.getMessage(), HttpStatus.valueOf(registerResponse.getStatusCode()));
+            return new ResponseEntity<>(registerResponse.getMessage(),
+                    HttpStatus.valueOf(registerResponse.getStatusCode()));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -56,19 +55,20 @@ public class AuthController {
     // @GetMapping(value = "/generateOTP")
     // public ResponseEntity<String> generateOTP() {
 
-    //     Twilio.init("", "");
+    // Twilio.init("", "");
 
-    //     // Verification verification = Verification.creator(
-    //     //         "",
-    //     //         "",
-    //     //         "sms")
-    //     //         .create();
+    // // Verification verification = Verification.creator(
+    // // "",
+    // // "",
+    // // "sms")
+    // // .create();
 
-    //     // System.out.println(verification.getStatus());
-  
-    //     // Create Message to be sent 
-    //     Message.creator(new PhoneNumber(""), "", "Hello from Twilio 📞").create(); 
+    // // System.out.println(verification.getStatus());
 
-    //     return new ResponseEntity<>("Your OTP has been sent to your verified phone number", HttpStatus.OK);
+    // // Create Message to be sent
+    // Message.creator(new PhoneNumber(""), "", "Hello from Twilio 📞").create();
+
+    // return new ResponseEntity<>("Your OTP has been sent to your verified phone
+    // number", HttpStatus.OK);
     // }
 }

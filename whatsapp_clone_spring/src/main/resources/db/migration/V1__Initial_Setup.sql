@@ -10,22 +10,6 @@ CREATE TABLE Users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE InnoDB;
 
-INSERT INTO
-    users (
-        fullname,
-        username,
-        email,
-        phone,
-        password
-    )
-VALUES (
-        "test inferno",
-        "test",
-        "test@gmail.com",
-        "0812345678",
-        "$2y$10$hWRLG61IFgxtuyVTOxz5weqrvwL0UcLfxAZ8/vOCcaTtWVjCd1VWC"
-    );
-
 CREATE TABLE Messages (
     id SERIAL PRIMARY KEY,
     sender_id INT NOT NULL REFERENCES Users (id),

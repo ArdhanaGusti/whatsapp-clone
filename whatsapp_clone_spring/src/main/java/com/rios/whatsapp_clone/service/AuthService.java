@@ -3,7 +3,6 @@ package com.rios.whatsapp_clone.service;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,9 +25,6 @@ public class AuthService {
     @Autowired
     private ValidationService validationService;
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
     @Transactional
     public TokenResponse login(LoginRequest request) {
         validationService.validate(request);
@@ -41,8 +37,6 @@ public class AuthService {
 
             Date expireDate = new Date(System.currentTimeMillis() + 864000);
             String token = JwtService.generateToken(request.getEmail(), expireDate);
-
-            redisTemplate.opsForValue().set(token, expireDate);
 
             return TokenResponse.builder()
                     .token(token)
@@ -79,17 +73,11 @@ public class AuthService {
 
     }
 
-    // @Transactional
-    // public TokenResponse register(RegisterRequest request) {
-    // validationService.validate(request);
-
-    // }
-
     public TokenResponse getToken(String token) {
-        var expireDate = (Date) redisTemplate.opsForValue().get(token);
+        // var expireDate = (Date) redisTemplate.opsForValue().get(token);
         return TokenResponse.builder()
                 .token(token)
-                .expiredAt(expireDate)
+                // .expiredAt(expireDate)
                 .build();
     }
 }
