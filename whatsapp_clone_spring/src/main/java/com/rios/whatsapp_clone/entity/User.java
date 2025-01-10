@@ -1,5 +1,6 @@
 package com.rios.whatsapp_clone.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String email;
@@ -35,10 +36,16 @@ public class User {
     private String phone;
 
     @Column(nullable = true)
+    private String token;
+
+    @Column(name = "token_end_time", nullable = true)
+    private LocalDateTime tokenEndTime;
+
+    @Column(nullable = true)
     private String status;
 
     @Column(name = "profile_picture_url", nullable = true)
     private String profilePicture;
-    
+
     private Date createdAt;
 }

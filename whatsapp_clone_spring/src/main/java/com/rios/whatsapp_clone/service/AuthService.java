@@ -1,7 +1,7 @@
 package com.rios.whatsapp_clone.service;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,10 +33,14 @@ public class AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email or password wrong"));
 
         if (BCrypt.checkpw(request.getPassword(), user.getPassword())) {
-            userRepository.save(user);
 
-            Date expireDate = new Date(System.currentTimeMillis() + 864000);
-            String token = JwtService.generateToken(request.getEmail(), expireDate);
+            LocalDateTime expireDate = LocalDateTime.now(ZoneId.of("UTC")).plusWeeks(1);
+            String token = JwtService.generateToken(request.getEmail());
+
+            user.setToken(token);
+            user.setTokenEndTime(expireDate);
+
+            userRepository.save(user);
 
             return TokenResponse.builder()
                     .token(token)
@@ -70,14 +74,21 @@ public class AuthService {
                 .message("User registered successfully")
                 .statusCode(200)
                 .build();
-
     }
 
     public TokenResponse getToken(String token) {
-        // var expireDate = (Date) redisTemplate.opsForValue().get(token);
-        return TokenResponse.builder()
-                .token(token)
-                // .expiredAt(expireDate)
-                .build();
+        User user = userRepository.findFirstByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+
+        System.out.println(LocalDateTime.now(ZoneId.of("UTC")));
+
+        if (user.getTokenEndTime().isAfter(LocalDateTime.now(ZoneId.of("UTC")))) {
+            return TokenResponse.builder()
+                    .token(token)
+                    .expiredAt(user.getTokenEndTime())
+                    .build();
+        } else {
+            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Token is expired");
+        }
     }
 }

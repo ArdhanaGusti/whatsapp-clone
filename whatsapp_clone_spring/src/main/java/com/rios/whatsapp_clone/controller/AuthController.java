@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.rios.whatsapp_clone.model.request.LoginRequest;
 import com.rios.whatsapp_clone.model.request.RegisterRequest;
+import com.rios.whatsapp_clone.model.response.ErrorResponse;
 import com.rios.whatsapp_clone.model.response.MessageAfterActionResponse;
 import com.rios.whatsapp_clone.model.response.TokenResponse;
 import com.rios.whatsapp_clone.model.response.WebResponse;
@@ -32,12 +34,17 @@ public class AuthController {
     }
 
     @GetMapping(path = "/api/auth/token", produces = MediaType.APPLICATION_JSON_VALUE)
-    public WebResponse<TokenResponse> token(String token) {
+    public ResponseEntity<Object> token(String token) {
         try {
             TokenResponse tokenResponse = authService.getToken(token);
-            return WebResponse.<TokenResponse>builder().data(tokenResponse).build();
-        } catch (Exception e) {
-            return WebResponse.<TokenResponse>builder().errors(e.getMessage()).build();
+            return new ResponseEntity<>(tokenResponse,
+                    HttpStatus.valueOf(200));
+            // return WebResponse.<TokenResponse>builder().data(tokenResponse).build();
+        } catch (ResponseStatusException e) {
+            ErrorResponse error = ErrorResponse.builder().message(e.getReason()).build();
+            return new ResponseEntity<>(error,
+                    HttpStatus.valueOf(e.getStatusCode().value()));
+            // return WebResponse.<TokenResponse>builder().errors(e.getMessage()).build();
         }
     }
 

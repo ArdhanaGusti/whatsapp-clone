@@ -7,6 +7,8 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL,
     profile_picture_url VARCHAR(255),
     status VARCHAR(255),
+    token VARCHAR(255),
+    token_end_time TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE InnoDB;
 
