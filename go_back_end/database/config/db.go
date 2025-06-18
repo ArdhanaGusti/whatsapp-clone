@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ArdhanaGusti/go-socket/models"
+	"github.com/ArdhanaGusti/go_back_end/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

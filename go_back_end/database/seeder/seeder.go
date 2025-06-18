@@ -3,8 +3,8 @@ package seeder
 import (
 	"fmt"
 
-	"github.com/ArdhanaGusti/go-socket/database/config"
-	"github.com/ArdhanaGusti/go-socket/models"
+	"github.com/ArdhanaGusti/go_back_end/database/config"
+	"github.com/ArdhanaGusti/go_back_end/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

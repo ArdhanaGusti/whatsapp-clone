@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/ArdhanaGusti/go-socket/database/config"
-	"github.com/ArdhanaGusti/go-socket/routes"
+	"github.com/ArdhanaGusti/go_back_end/database/config"
+	"github.com/ArdhanaGusti/go_back_end/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/subosito/gotenv"
 )
@@ -16,8 +16,15 @@ func setupRouter() *gin.Engine {
 
 	v1 := r.Group("/api/v1")
 	{
-		v1.POST("/auth/register", routes.RegisterUser)
-		v1.POST("/auth/login", routes.LoginUser)
+		v2 := v1.Group("/auth")
+		{
+			v2.POST("/register", routes.RegisterUser)
+			v2.POST("/login", routes.LoginUser)
+		}
+		v3 := v1.Group("/message")
+		{
+			v3.GET("/get", routes.GetMessage)
+		}
 	}
 
 	return r

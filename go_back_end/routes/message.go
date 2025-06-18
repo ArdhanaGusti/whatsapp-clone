@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ArdhanaGusti/go-socket/database/config"
-	"github.com/ArdhanaGusti/go-socket/models"
+	"github.com/ArdhanaGusti/go_back_end/database/config"
+	"github.com/ArdhanaGusti/go_back_end/handler/failed"
+	"github.com/ArdhanaGusti/go_back_end/handler/response"
+	"github.com/ArdhanaGusti/go_back_end/models"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
 )
 
 var upgrader = websocket.Upgrader{
@@ -51,4 +54,24 @@ func HandleConnections(c *gin.Context) {
 			}
 		}
 	}
+}
+
+func GetMessage(c *gin.Context) {
+	userId := c.Query("userId")
+	var allMessages []response.AllMessageResponse
+	// var allMessages []models.Message
+	if err := config.DB.Model(&models.Message{}).Preload("Sender", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id, username")
+	}).Preload("Receiver", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id, username")
+	}).Where("sender_id = ? ", userId).Or("receiver_id = ? ", userId).Find(&allMessages).Error; err != nil {
+		c.JSON(404, failed.FailedResponse{
+			StatusCode: 404,
+			Message:    "Message don't exist",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(200, allMessages)
 }
