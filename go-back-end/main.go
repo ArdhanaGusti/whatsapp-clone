@@ -12,9 +12,7 @@ import (
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/ws", func(c *gin.Context) {
-		routes.HandleConnections(c)
-	})
+	r.GET("/ws", routes.HandleConnections)
 
 	v1 := r.Group("/api/v1")
 	{
@@ -34,8 +32,6 @@ func main() {
 	// seeder.SeedDatabase()
 
 	r := setupRouter()
-
-	go routes.HandleMessages()
 
 	fmt.Println("Gin WebSocket server running on :8080")
 	r.Run(":8080")

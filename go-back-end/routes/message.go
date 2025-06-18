@@ -17,7 +17,8 @@ var upgrader = websocket.Upgrader{
 }
 
 var clients = make(map[*websocket.Conn]bool)
-var broadcast = make(chan models.Message)
+
+// var broadcast = make(chan models.Message)
 
 func HandleConnections(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
@@ -37,24 +38,16 @@ func HandleConnections(c *gin.Context) {
 			break
 		}
 
-		broadcast <- msg
-	}
-}
-
-func HandleMessages() {
-	for {
-		msg := <-broadcast
 		if err := config.DB.Create(&msg).Error; err != nil {
 			fmt.Println("Error save message:", err)
+			delete(clients, conn)
+			break
 		} else {
-			fmt.Println("Successfully save message")
-		}
-		for client := range clients {
-			err := client.WriteJSON(&msg)
-			if err != nil {
-				fmt.Println("Error writing JSON:", err)
-				client.Close()
-				delete(clients, client)
+			erw := conn.WriteMessage(websocket.TextMessage, []byte("Successfully create message"))
+			if erw != nil {
+				fmt.Println("Error writing JSON:", erw)
+				delete(clients, conn)
+				break
 			}
 		}
 	}
