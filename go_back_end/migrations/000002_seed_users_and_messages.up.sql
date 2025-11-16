@@ -1,14 +1,16 @@
 INSERT INTO users (username, email, password, created_at, updated_at) VALUES
-('john_doe', 'john@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('jane_smith', 'jane@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('michael', 'michael@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('sarah', 'sarah@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('alex', 'alex@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('emma', 'emma@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('robert', 'robert@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('linda', 'linda@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('kevin', 'kevin@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
-('olivia', 'olivia@example.com', '$2a$10$PqA2rT5PZbDqXgV3pHqZ8OnMUO/RlYV6iYm.LY.SwnC4Hnq2zHzd.', UTC_TIMESTAMP(), UTC_TIMESTAMP());
+('john_doe', 'john@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('jane_smith', 'jane@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('michael', 'michael@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('sarah', 'sarah@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('alex', 'alex@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('emma', 'emma@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('robert', 'robert@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('linda', 'linda@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('kevin', 'kevin@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP()),
+('olivia', 'olivia@example.com', '$2a$12$nebQon9Bwm4xeGV1d9AQJuAEywBEQiTWngKthCN8n6RV08m3U8/lm', UTC_TIMESTAMP(), UTC_TIMESTAMP());
+
+-- Pasword admin123
 
 INSERT INTO messages (message, sender_id, receiver_id, created_at, updated_at) VALUES
 ('Hello Jane!', 1, 2, UTC_TIMESTAMP(), UTC_TIMESTAMP()),
