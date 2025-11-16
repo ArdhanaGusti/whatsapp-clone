@@ -167,4 +167,4 @@ If you like this project, please give it a ⭐ on GitHub!
 
 ## 📜 License
 
-MIT License © 2025 Your Name
+MIT License © 2025 ardhanagusti
