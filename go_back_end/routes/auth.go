@@ -125,3 +125,20 @@ func getToken(user *models.User) (string, error) {
 
 	return tokenString, nil
 }
+
+func GetMe(c *gin.Context) {
+	userId := c.Query("userId")
+	var me models.User
+
+	if userId == "" {
+		c.JSON(400, "Missing user ID")
+		return
+	}
+
+	if err := config.DB.Where("id = ?", userId).First(&me).Error; err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+
+	c.JSON(200, me)
+}

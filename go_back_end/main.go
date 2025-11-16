@@ -21,6 +21,7 @@ func setupRouter() *gin.Engine {
 		{
 			v2.POST("/register", routes.RegisterUser)
 			v2.POST("/login", routes.LoginUser)
+			v2.GET("/me", routes.GetMe)
 		}
 		v3 := v1.Group("/message")
 		{
