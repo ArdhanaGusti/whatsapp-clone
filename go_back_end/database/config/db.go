@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ArdhanaGusti/go_back_end/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -27,11 +26,4 @@ func InitDB() {
 		panic("Failed to connect")
 	}
 	// defer db.DB()
-
-	DB.AutoMigrate(&models.User{}, &models.Message{})
-}
-
-func MigrateFreshDB() {
-	DB.Migrator().DropTable(&models.User{}, &models.Message{})
-	DB.AutoMigrate(&models.User{}, &models.Message{})
 }

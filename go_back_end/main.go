@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/ArdhanaGusti/go_back_end/database/config"
-	"github.com/ArdhanaGusti/go_back_end/routes"
+	"whatsapp-clone/go_back_end/database/config"
+	"whatsapp-clone/go_back_end/routes"
+
 	"github.com/gin-gonic/gin"
 	"github.com/subosito/gotenv"
 )
@@ -23,7 +24,8 @@ func setupRouter() *gin.Engine {
 		}
 		v3 := v1.Group("/message")
 		{
-			v3.GET("/get", routes.GetMessage)
+			v3.GET("/", routes.GetMessageHeader)
+			v3.GET("/detail", routes.GetMessageHeader)
 		}
 	}
 
@@ -33,10 +35,6 @@ func setupRouter() *gin.Engine {
 func main() {
 	gotenv.Load()
 	config.InitDB()
-
-	// config.MigrateFreshDB()
-
-	// seeder.SeedDatabase()
 
 	r := setupRouter()
 

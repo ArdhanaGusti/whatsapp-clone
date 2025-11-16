@@ -4,10 +4,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/ArdhanaGusti/go_back_end/database/config"
-	"github.com/ArdhanaGusti/go_back_end/handler/failed"
-	"github.com/ArdhanaGusti/go_back_end/handler/payload"
-	"github.com/ArdhanaGusti/go_back_end/models"
+	"whatsapp-clone/go_back_end/database/config"
+	"whatsapp-clone/go_back_end/handler/failed"
+	"whatsapp-clone/go_back_end/handler/payload"
+	"whatsapp-clone/go_back_end/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"

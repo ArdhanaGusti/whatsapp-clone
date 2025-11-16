@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ArdhanaGusti/go_back_end/database/config"
-	"github.com/ArdhanaGusti/go_back_end/handler/failed"
-	"github.com/ArdhanaGusti/go_back_end/handler/response"
-	"github.com/ArdhanaGusti/go_back_end/models"
+	"whatsapp-clone/go_back_end/database/config"
+	"whatsapp-clone/go_back_end/handler/response"
+	"whatsapp-clone/go_back_end/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -47,7 +47,7 @@ func HandleConnections(c *gin.Context) {
 		} else {
 			erw := conn.WriteMessage(websocket.TextMessage, []byte("Successfully create message"))
 			if erw != nil {
-				fmt.Println("Error writing JSON:", erw)
+				fmt.Println("Error send response:", erw)
 				delete(clients, conn)
 				break
 			}
@@ -55,28 +55,18 @@ func HandleConnections(c *gin.Context) {
 	}
 }
 
-func GetMessage(c *gin.Context) {
+func GetMessageHeader(c *gin.Context) {
 	userId := c.Query("userId")
 	var allMessages []response.AllMessageResponse
-	query := `
-		SELECT m.id
-			,m.message
-			,m.sender_id
-			,m.receiver_id
-			,s.username as sender_name
-			,r.username as receiver_name
-		FROM messages m
-		LEFT JOIN users s
-			ON s.id = m.sender_id
-		LEFT JOIN users r
-			ON r.id = m.receiver_id
-		WHERE m.sender_id = ? OR m.receiver_id = ?
-		`
-	if err := config.DB.Raw(query, userId, userId).Scan(&allMessages).Error; err != nil {
-		c.JSON(400, failed.FailedResponse{
-			StatusCode: 400,
-			Message:    "Error get messages:" + err.Error(),
-		})
+
+	if userId == "" {
+		c.JSON(400, "Missing user ID")
+		return
+	}
+
+	if err := config.DB.Raw("CALL lastMessages(?);", userId).Scan(&allMessages).Error; err != nil {
+		c.JSON(400, err.Error())
+		return
 	}
 
 	c.JSON(200, allMessages)
