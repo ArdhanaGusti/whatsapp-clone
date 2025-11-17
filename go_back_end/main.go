@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"whatsapp-clone/go_back_end/database/config"
+	"whatsapp-clone/go_back_end/middleware"
 	"whatsapp-clone/go_back_end/routes"
 
 	"github.com/gin-gonic/gin"
@@ -21,12 +22,12 @@ func setupRouter() *gin.Engine {
 		{
 			v2.POST("/register", routes.RegisterUser)
 			v2.POST("/login", routes.LoginUser)
-			v2.GET("/me", routes.GetMe)
+			v2.GET("/me", middleware.IsAuth(), routes.GetMe)
 		}
 		v3 := v1.Group("/message")
 		{
-			v3.GET("/", routes.GetMessageHeader)
-			v3.GET("/detail", routes.GetMessageHeader)
+			v3.GET("/", middleware.IsAuth(), routes.GetMessageHeader)
+			// v3.GET("/detail", routes.GetMessageHeader)
 		}
 	}
 

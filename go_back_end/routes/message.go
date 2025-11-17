@@ -56,10 +56,10 @@ func HandleConnections(c *gin.Context) {
 }
 
 func GetMessageHeader(c *gin.Context) {
-	userId := c.Query("userId")
+	userId := uint(c.MustGet("jwt_user_id").(float64))
 	var allMessages []response.AllMessageResponse
 
-	if userId == "" {
+	if userId == 0 {
 		c.JSON(400, "Missing user ID")
 		return
 	}

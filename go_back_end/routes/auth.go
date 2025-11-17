@@ -127,13 +127,8 @@ func getToken(user *models.User) (string, error) {
 }
 
 func GetMe(c *gin.Context) {
-	userId := c.Query("userId")
 	var me models.User
-
-	if userId == "" {
-		c.JSON(400, "Missing user ID")
-		return
-	}
+	userId := uint(c.MustGet("jwt_user_id").(float64))
 
 	if err := config.DB.Where("id = ?", userId).First(&me).Error; err != nil {
 		c.JSON(400, err.Error())
