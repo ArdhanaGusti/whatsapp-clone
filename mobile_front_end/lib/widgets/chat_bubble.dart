@@ -19,8 +19,8 @@ class ChatBubble extends StatelessWidget {
       bottomRight: Radius.circular(isMe ? 4 : radius),
     );
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: align,
         children: [
