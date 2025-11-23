@@ -49,11 +49,12 @@ class MyApp extends StatelessWidget {
     );
 
     return MaterialApp(
+      restorationScopeId: null,
       title: 'Chat UI',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: const SplashPage(),
+      initialRoute: "/",
       onGenerateRoute: (settings) => _platformAwareRoute(settings),
       debugShowCheckedModeBanner: false,
     );
@@ -81,9 +82,10 @@ class MyApp extends StatelessWidget {
     );
 
     return CupertinoApp(
+      restorationScopeId: null,
       title: 'Chat UI',
       theme: cupertinoLight,
-      home: const SplashPage(),
+      initialRoute: "/",
       onGenerateRoute: (settings) => _platformAwareRoute(settings),
       debugShowCheckedModeBanner: false,
     );
