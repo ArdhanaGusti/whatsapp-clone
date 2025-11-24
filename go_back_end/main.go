@@ -27,7 +27,7 @@ func setupRouter() *gin.Engine {
 		v3 := v1.Group("/message")
 		{
 			v3.GET("/", middleware.IsAuth(), routes.GetMessageHeader)
-			// v3.GET("/detail", routes.GetMessageHeader)
+			v3.GET("/detail", middleware.IsAuth(), routes.GetMessageDetails)
 		}
 	}
 
