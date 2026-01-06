@@ -1,10 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_front_end/models/chat.dart';
 import 'package:mobile_front_end/pages/chat_room.dart';
+import 'package:mobile_front_end/services/chat_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = 'home';
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool isLoading = true;
+  List<Chat> chats = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchChat();
+  }
+
+  Future<void> _fetchChat() async {
+    try {
+      final result = await ChatService.getHomeMessage();
+      setState(() {
+        chats = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Get Data Failed')),
+      );
+    }
+  }
 
   void _openChat(BuildContext context, String roomId, String title) {
     Navigator.of(context).pushNamed(ChatRoomPage.routeName, arguments: {'roomId': roomId, 'title': title});
@@ -19,21 +52,22 @@ class HomePage extends StatelessWidget {
 
     final messagesPreview = ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      itemCount: 8,
       separatorBuilder: (_, __) => const Divider(height: 8),
-      itemBuilder: (context, idx) {
-        final isMe = idx.isEven;
+      itemCount: chats.length,
+      itemBuilder: (context, id) {
+        final chat = chats[id];
+        final isMe = chat.isSender;
         return ListTile(
-          onTap: () => _openChat(context, 'room_$idx', 'Conversation #$idx'),
-          leading: CircleAvatar(child: Text('U$idx')),
-          title: Text('User $idx', style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(isMe ? 'You: That works well.' : 'Hey, what do you think about this design?'),
-          trailing: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('12:3${idx}'), if (idx % 3 == 0) const CircleAvatar(radius: 10, child: Text('3', style: TextStyle(fontSize: 12)))]),
+          onTap: () => _openChat(context, 'room_$id', 'Conversation #$id'),
+          leading: CircleAvatar(child: Text('${id + 1}')),
+          title: Text(chat.oppositeName, style: Theme.of(context).textTheme.titleMedium),
+          subtitle: Text(isMe ? 'You: ${chat.message}' : chat.message),
+          trailing: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('12:3${id}'), if (id % 3 == 0) const CircleAvatar(radius: 10, child: Text('3', style: TextStyle(fontSize: 12)))]),
         );
       },
     );
 
-    final body = Container(
+    final body = isLoading ? const Center(child: CircularProgressIndicator()) : Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: messagesPreview,
     );

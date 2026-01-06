@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_front_end/pages/home.dart';
 import 'package:mobile_front_end/pages/register.dart';
+import 'package:mobile_front_end/services/auth_service.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
 
@@ -28,8 +29,19 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).pushNamed(RegisterPage.routeName);
   }
 
-  void _loginPressed() {
-    Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+  void _loginPressed() async {
+    final success = await AuthService.login(
+      _email.text,
+      _password.text,
+    );
+
+    if (success) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed')),
+      );
+    }
   }
 
   @override

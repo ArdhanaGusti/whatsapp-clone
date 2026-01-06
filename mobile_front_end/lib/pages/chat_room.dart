@@ -1,6 +1,3 @@
-// ignore_for_file: unused_import
-
-import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_front_end/styles/style.dart';

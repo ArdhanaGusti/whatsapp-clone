@@ -111,8 +111,9 @@ class MyApp extends StatelessWidget {
         page = ChatRoomPage(roomId: args['roomId'] ?? 'room', title: args['title'] ?? 'Chat');
         break;
       default:
-        page = const SplashPage();
+        page = const HomePage();
     }
+
     if (isIOS) {
       return CupertinoPageRoute(builder: (_) => page, settings: settings);
     } else {

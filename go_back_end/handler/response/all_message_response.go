@@ -3,6 +3,7 @@ package response
 import "time"
 
 type AllMessageResponse struct {
+	Id           uint      `json:"id"`
 	Message      string    `json:"message"`
 	OppositeName string    `json:"opposite_name"`
 	IsSender     bool      `json:"is_sender"`
