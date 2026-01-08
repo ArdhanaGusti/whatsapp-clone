@@ -72,13 +72,6 @@ class _SplashPageState extends State<SplashPage> {
           const SizedBox(height: 8),
           Text('Clean • Rounded • Fast', style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 18),
-          // small continue/skip for preview
-          CustomButton(
-            text: 'Continue',
-            onPressed: _navigateToLogin,
-            filled: false,
-            minWidth: 140,
-          )
         ],
       ),
     );

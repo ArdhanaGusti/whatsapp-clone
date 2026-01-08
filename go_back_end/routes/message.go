@@ -75,14 +75,28 @@ func GetMessageHeader(c *gin.Context) {
 func GetMessageDetails(c *gin.Context) {
 	userId := uint(c.MustGet("jwt_user_id").(float64))
 	oppositeId := c.Query("userId")
-	var allMessages []models.Message
+	var allMessages []response.DetailMessageResponse
 
 	if userId == 0 {
 		c.JSON(400, "Missing user ID")
 		return
 	}
 
-	if err := config.DB.Where("sender_id = ? AND receiver_id = ?", userId, oppositeId).Or("sender_id = ? AND receiver_id = ?", oppositeId, userId).Find(&allMessages).Error; err != nil {
+	if err := config.DB.
+		Model(models.Message{}).
+		Select(`
+			id,
+			message,
+			CASE
+				WHEN sender_id = ? THEN 1
+				ELSE 0
+			END AS is_me,
+			created_at,
+			updated_at,
+			deleted_at
+		`, userId).
+		Where("sender_id = ? AND receiver_id = ?", userId, oppositeId).Or("sender_id = ? AND receiver_id = ?", oppositeId, userId).
+		Order("id DESC").Scan(&allMessages).Error; err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
