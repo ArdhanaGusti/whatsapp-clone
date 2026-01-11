@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile_front_end/services/chat_service.dart';
 import 'package:mobile_front_end/styles/style.dart';
+import 'package:provider/provider.dart';
 import 'pages/splash.dart';
 import 'pages/login.dart';
 import 'pages/register.dart';
@@ -12,7 +14,12 @@ import 'pages/chat_room.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => ChatService())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 bool get isIOS => !kIsWeb && Platform.isIOS;
@@ -39,9 +46,14 @@ class MyApp extends StatelessWidget {
 
     final darkTheme = ThemeData(
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary, brightness: Brightness.dark),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.dark,
+      ),
       scaffoldBackgroundColor: AppColors.darkBackground,
-      textTheme: GoogleFonts.poppinsTextTheme(ThemeData(brightness: Brightness.dark).textTheme),
+      textTheme: GoogleFonts.poppinsTextTheme(
+        ThemeData(brightness: Brightness.dark).textTheme,
+      ),
       useMaterial3: true,
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.primary,
@@ -108,7 +120,11 @@ class MyApp extends StatelessWidget {
         break;
       case ChatRoomPage.routeName:
         final args = settings.arguments as Map<String, dynamic>? ?? {};
-        page = ChatRoomPage(roomId: args['roomId'] ?? 'room', title: args['title'] ?? 'Chat');
+        page = ChatRoomPage(
+          chatId: args['chatId'] ?? 0,
+          meId: args['meId'] ?? 0,
+          title: args['title'] ?? 'Chat',
+        );
         break;
       default:
         page = const HomePage();

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -45,11 +46,14 @@ func HandleConnections(c *gin.Context) {
 			delete(clients, conn)
 			break
 		} else {
-			erw := conn.WriteMessage(websocket.TextMessage, []byte("Successfully create message"))
-			if erw != nil {
-				fmt.Println("Error send response:", erw)
-				delete(clients, conn)
-				break
+			data, err := json.Marshal(&msg)
+			if err == nil {
+				erw := conn.WriteMessage(websocket.TextMessage, data)
+				if erw != nil {
+					fmt.Println("Error send response:", erw)
+					delete(clients, conn)
+					break
+				}
 			}
 		}
 	}

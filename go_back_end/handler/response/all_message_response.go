@@ -7,6 +7,7 @@ type AllMessageResponse struct {
 	Message      string    `json:"message"`
 	OppositeName string    `json:"opposite_name"`
 	OppositeId   int       `json:"opposite_id"`
+	MeId         int       `json:"me_id"`
 	IsSender     bool      `json:"is_sender"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`

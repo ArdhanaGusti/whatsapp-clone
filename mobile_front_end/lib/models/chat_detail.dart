@@ -1,34 +1,25 @@
-class Chat {
+class ChatDetail {
   final int id;
   final String message;
-  final String oppositeName;
-  final int oppositeId;
-  final int meId;
-  final bool isSender;
+  final bool isMe;
   // final DateTime createdAt;
   // final DateTime updatedAt;
   // final DateTime? deletedAt;
 
-  Chat({
+  ChatDetail({
     required this.id,
     required this.message,
-    required this.oppositeName,
-    required this.oppositeId,
-    required this.meId,
-    required this.isSender,
+    required this.isMe,
     // required this.createdAt,
     // required this.updatedAt,
     // this.deletedAt,
   });
 
-  factory Chat.fromJson(Map<String, dynamic> json) {
-    return Chat(
+  factory ChatDetail.fromJson(Map<String, dynamic> json) {
+    return ChatDetail(
       id: json['id'],
       message: json['message'],
-      oppositeName: json['opposite_name'],
-      oppositeId: json['opposite_id'],
-      meId: json['me_id'],
-      isSender: json['is_sender'],
+      isMe: json['is_me'],
       // createdAt: json['created_at'],
       // updatedAt: json['updated_at'],
       // deletedAt: json['deleted_at'],
