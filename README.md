@@ -134,12 +134,13 @@ static const String baseUrl = "http://your-ip:8080";
 
 ## 📸 Screenshots
 
-(Add your images here)
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/a0779d79-b6f0-4620-b054-4a098c583d07" width="200" />
+  <img src="https://github.com/user-attachments/assets/0fb20b05-bbdb-4bf3-a467-31189f164dcf" width="200" />
+  <img src="https://github.com/user-attachments/assets/f784ee45-eace-4baa-94d9-0fd6fded9af3" width="200" />
+  <img src="https://github.com/user-attachments/assets/696cfb7b-01ea-46c7-a2a4-b2fba01a5b2d" width="600" />
 
-    ![Login]()
-    ![Chat List]()
-    ![Chat Screen]()
-    ![Media Preview]()
+</p>
 
 ------------------------------------------------------------------------
 
