@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_front_end/models/profile.dart';
 import '../utils/token_storage.dart';
 
-class AuthService {
+class AuthService extends ChangeNotifier {
   static const String baseUrl = 'http://10.0.2.2:8080/api/v1/auth';
+  late Profile profile;
 
   static Future<bool> login(String email, String password) async {
     final response = await http.post(
@@ -28,15 +31,20 @@ class AuthService {
     }
   }
 
-  static Future<http.Response> getProfile() async {
+  Future<void> getProfile() async {
     final token = await TokenStorage.getToken();
 
-    return await http.get(
+    final response = await http.get(
       Uri.parse('$baseUrl/me'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
     );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      profile = Profile.fromJson(json);
+    }
   }
 }

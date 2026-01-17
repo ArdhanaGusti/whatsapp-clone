@@ -38,6 +38,8 @@ func main() {
 	gotenv.Load()
 	config.InitDB()
 
+	go routes.HandleBroadcasts()
+
 	r := setupRouter()
 
 	fmt.Println("Gin WebSocket server running on :8080")

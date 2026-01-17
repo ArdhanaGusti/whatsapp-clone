@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile_front_end/services/auth_service.dart';
 import 'package:mobile_front_end/services/chat_service.dart';
+import 'package:mobile_front_end/services/socket_service.dart';
 import 'package:mobile_front_end/styles/style.dart';
 import 'package:provider/provider.dart';
 import 'pages/splash.dart';
@@ -14,9 +16,13 @@ import 'pages/chat_room.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SocketService().connect();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ChatService())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatService()),
+        ChangeNotifierProvider(create: (_) => AuthService()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -122,7 +128,6 @@ class MyApp extends StatelessWidget {
         final args = settings.arguments as Map<String, dynamic>? ?? {};
         page = ChatRoomPage(
           chatId: args['chatId'] ?? 0,
-          meId: args['meId'] ?? 0,
           title: args['title'] ?? 'Chat',
         );
         break;

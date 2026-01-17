@@ -6,11 +6,12 @@ import 'package:mobile_front_end/models/chat_detail.dart';
 import '../utils/token_storage.dart';
 
 class ChatService extends ChangeNotifier {
+  static const String baseUrl = 'http://10.0.2.2:8080/api/v1/message';
+  
   List<Chat> chats = [];
   List<ChatDetail> chatDetails = [];
   bool homeLoading = false;
   bool chatLoading = false;
-  static const String baseUrl = 'http://10.0.2.2:8080/api/v1/message';
 
   Future<void> getHomeMessage() async {
     homeLoading = true;

@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_front_end/models/chat_detail.dart';
 import 'package:mobile_front_end/models/message.dart';
+import 'package:mobile_front_end/services/auth_service.dart';
 import 'package:mobile_front_end/services/chat_service.dart';
 import 'package:mobile_front_end/services/socket_service.dart';
 import 'package:mobile_front_end/styles/style.dart';
@@ -14,9 +15,12 @@ import '../widgets/custom_text_field.dart';
 class ChatRoomPage extends StatefulWidget {
   static const routeName = 'chat_room';
   final int chatId;
-  final int meId;
   final String title;
-  const ChatRoomPage({super.key, required this.chatId, required this.meId ,required this.title});
+  const ChatRoomPage({
+    super.key,
+    required this.chatId,
+    required this.title,
+  });
 
   @override
   State<ChatRoomPage> createState() => _ChatRoomPageState();
@@ -24,25 +28,29 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   final TextEditingController _controller = TextEditingController();
-  final socketService = SocketService();
+  
+  late StreamSubscription _subscription;
+  late final ChatService chatService;
+  late final AuthService authService;
 
   @override
   void initState() {
-    context.read<ChatService>().getMessageDetail(widget.chatId);
+    chatService = context.read<ChatService>();
+    authService = context.read<AuthService>();
 
-    socketService.connect();
-    
-    socketService.stream.listen(
+    chatService.getMessageDetail(widget.chatId);
+
+    _subscription = SocketService().stream.listen(
       (data) {
         var jsonData = jsonDecode(data);
         var message = Message.fromJson(jsonData);
-        
-        context.read<ChatService>().getMessageDetail(widget.chatId);
-        context.read<ChatService>().getHomeMessage();
-        // if (message) {
-          
-        // }
-        print('Received from WS: ${message.message}');
+
+        if (message.receiverID == authService.profile.id ||
+            message.senderId == authService.profile.id) {
+          chatService.getMessageDetail(widget.chatId);
+          // chatService.getHomeMessage();
+        }
+        print('Received from: ${message.message}');
       },
       onError: (error) {
         print('WebSocket Error: $error');
@@ -56,12 +64,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   void dispose() {
-    socketService.disconnect();
+    _subscription.cancel();
     super.dispose();
   }
 
   void _sendPressed() {
-    socketService.sendMessage(_controller.text, widget.meId, widget.chatId);
+    SocketService().sendMessage(_controller.text, authService.profile.id, widget.chatId);
     _controller.clear();
   }
 
@@ -102,9 +110,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       itemBuilder: (context, id) {
         final chat = chatService.chatDetails[id];
         return Align(
-          alignment: chat.isMe
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
+          alignment: chat.isMe ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: ChatBubble(

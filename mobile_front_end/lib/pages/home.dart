@@ -1,8 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_front_end/models/chat.dart';
+import 'package:mobile_front_end/models/message.dart';
 import 'package:mobile_front_end/pages/chat_room.dart';
+import 'package:mobile_front_end/services/auth_service.dart';
 import 'package:mobile_front_end/services/chat_service.dart';
+import 'package:mobile_front_end/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,16 +20,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late StreamSubscription _subscription;
+
+  late final AuthService authService;
+  late final ChatService chatService;
+  
   @override
   void initState() {
-    context.read<ChatService>().getHomeMessage();
+    authService = context.read<AuthService>();
+    chatService = context.read<ChatService>();
+
+    chatService.getHomeMessage();
+    authService.getProfile();
+
+    _subscription = SocketService().stream.listen((data) {
+        var jsonData = jsonDecode(data);
+        var message = Message.fromJson(jsonData);
+
+        if (message.receiverID == authService.profile.id ||
+            message.senderId == authService.profile.id) {
+          chatService.getHomeMessage();
+        }
+        print('Received from: ${message.message}');
+      },
+      onError: (error) {
+        print('WebSocket Error: $error');
+      },
+      onDone: () {
+        print('WebSocket closed');
+      },);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   void _openChat(BuildContext context, int chatId, int meId, String title) {
     Navigator.of(context).pushNamed(
       ChatRoomPage.routeName,
-      arguments: {'chatId': chatId, 'meId': meId, 'title': title},
+      arguments: {'chatId': chatId, 'title': title},
     );
   }
 

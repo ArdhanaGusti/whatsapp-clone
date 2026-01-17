@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 
 	"whatsapp-clone/go_back_end/database/config"
 	"whatsapp-clone/go_back_end/handler/response"
@@ -19,9 +20,11 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var clients = make(map[*websocket.Conn]bool)
-
-// var broadcast = make(chan models.Message)
+var (
+	clients   = make(map[*websocket.Conn]bool)
+	clientsMu sync.Mutex
+	broadcast = make(chan models.Message)
+)
 
 func HandleConnections(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
@@ -29,8 +32,17 @@ func HandleConnections(c *gin.Context) {
 		fmt.Println("WebSocket Upgrade Error:", err)
 		return
 	}
-	defer conn.Close()
+
+	clientsMu.Lock()
 	clients[conn] = true
+	clientsMu.Unlock()
+
+	defer func() {
+		clientsMu.Lock()
+		delete(clients, conn)
+		clientsMu.Unlock()
+		conn.Close()
+	}()
 
 	for {
 		var msg models.Message
@@ -45,17 +57,28 @@ func HandleConnections(c *gin.Context) {
 			fmt.Println("Error save message:", err)
 			delete(clients, conn)
 			break
-		} else {
-			data, err := json.Marshal(&msg)
-			if err == nil {
-				erw := conn.WriteMessage(websocket.TextMessage, data)
-				if erw != nil {
-					fmt.Println("Error send response:", erw)
-					delete(clients, conn)
-					break
-				}
+		}
+
+		broadcast <- msg
+	}
+}
+
+func HandleBroadcasts() {
+	for msg := range broadcast {
+		data, err := json.Marshal(msg)
+		if err != nil {
+			continue
+		}
+
+		clientsMu.Lock()
+		for client := range clients {
+			if err := client.WriteMessage(websocket.TextMessage, data); err != nil {
+				fmt.Println("Write error:", err)
+				client.Close()
+				delete(clients, client)
 			}
 		}
+		clientsMu.Unlock()
 	}
 }
 
